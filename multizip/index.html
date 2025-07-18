@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Multi Zip Tool</title>
+<link rel="stylesheet" href="multizip.css" />
+</head>
+<body>
+
+<h1>Multi Zip Tool</h1>
+
+<div id="dropzone">Drag & Drop files here</div>
+
+<label for="fileList">Files:</label>
+<select id="fileList" size="5" multiple></select>
+
+<label for="formatSelect">Select archive format:</label>
+<select id="formatSelect">
+  <option value="zip">ZIP (.zip)</option>
+  <option value="gz">GZIP (.gz)</option>
+  <option value="tar">TAR (.tar)</option>
+</select>
+
+<button id="downloadBtn" disabled>Download Archive</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fflate@0.7.4/umd/index.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
+<script src="multizip.js"></script>
+</body>
+</html>
