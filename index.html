@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Batch File Renamer</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <h1>Batch File Renamer</h1>
 
-  <input type="file" id="fileInput" webkitdirectory multiple>
-  <input type="text" id="prefix" placeholder="Enter prefix (e.g. Vacation_)">
-  <button id="renameBtn">Preview Renames</button>
+  <input type="file" id="fileInput" multiple />
+  <div id="fileList"></div>
 
-  <div id="output"></div>
+  <label for="renamePattern">Rename pattern (use {num} for numbering):</label>
+  <input type="text" id="renamePattern" placeholder="e.g. image_{num}.jpg" value="file_{num}" />
 
-  <script src="renamer.js"></script>
+  <button id="previewBtn">Preview Rename</button>
+  <div id="previewList"></div>
+
+  <button id="downloadZipBtn" disabled>Download Renamed ZIP</button>
+
+  <script src="libs/jszip.min.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
