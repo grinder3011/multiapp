@@ -50,35 +50,30 @@
 
   <textarea id="text1" placeholder="Enter original text here..."></textarea>
   <textarea id="text2" placeholder="Enter modified text here..."></textarea>
-  <button onclick="runDiff()">Compare</button>
+  <button id="compare-btn">Compare</button>
 
   <div id="output" class="diff-output"></div>
 
-  <!-- Load the correct working diff-match-patch library -->
-  <script src="https://unpkg.com/diff-match-patch@1.0.5/index.js"></script>
+  <!-- ✅ Correct working UMD build -->
+  <script src="https://cdn.jsdelivr.net/npm/diff-match-patch@1.0.4/dist/diff-match-patch.min.js"></script>
 
   <script>
-    function runDiff() {
-      const text1 = document.getElementById('text1').value;
-      const text2 = document.getElementById('text2').value;
-
-      if (!window.diff_match_patch) {
-        alert("diff_match_patch library not loaded");
-        return;
-      }
+    document.getElementById("compare-btn").addEventListener("click", function () {
+      const text1 = document.getElementById("text1").value;
+      const text2 = document.getElementById("text2").value;
 
       const dmp = new diff_match_patch();
       const diffs = dmp.diff_main(text1, text2);
       dmp.diff_cleanupSemantic(diffs);
 
       const result = diffs.map(([op, data]) => {
-        if (op === 1) return `<ins>${data}</ins>`; // added
-        if (op === -1) return `<del>${data}</del>`; // removed
-        return data; // unchanged
-      }).join('');
+        if (op === 1) return `<ins>${data}</ins>`;     // Insertion
+        if (op === -1) return `<del>${data}</del>`;    // Deletion
+        return data;                                   // Equal
+      }).join("");
 
-      document.getElementById('output').innerHTML = result;
-    }
+      document.getElementById("output").innerHTML = result;
+    });
   </script>
 </body>
 </html>
