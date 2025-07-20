@@ -1,32 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Multi App Hub</title>
-<style>
-  body { font-family: Arial, sans-serif; padding: 2rem; }
-  h1 { margin-bottom: 1rem; }
-  ul { list-style: none; padding: 0; }
-  li { margin-bottom: 0.5rem; }
-  a {
-    text-decoration: none;
-    color: #0b76ef;
-    font-weight: bold;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MultiTool Hub</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 2rem;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    ul.tool-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      padding: 0;
+    }
+
+    li.tool-item {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 1rem;
+      transition: transform 0.2s;
+    }
+
+    li.tool-item:hover {
+      transform: translateY(-4px);
+    }
+
+    a.tool-link {
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: bold;
+      display: block;
+      font-size: 1.1rem;
+    }
+
+    .tool-desc {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #555;
+    }
+  </style>
 </head>
 <body>
 
-<h1>Multi App Hub</h1>
+<h1>🧰 MultiTool Hub</h1>
 
-<ul>
-  <li><a href="renamer/index.html" target="_blank">Batch File Renamer</a></li>
-  <li><a href="mp3tagger/index.html" target="_blank">MP3 Tag Editor</a></li>
-  <li><a href="multizip/index.html" target="_blank">Multi Zip Tool</a></li>
+<ul class="tool-list">
+  <li class="tool-item">
+    <a class="tool-link" href="renamer/index.html">📝 File Renamer</a>
+    <div class="tool-desc">Batch rename files quickly with patterns and rules.</div>
+  </li>
+
+  <li class="tool-item">
+    <a class="tool-link" href="multizip/index.html">📦 MultiZip Tool</a>
+    <div class="tool-desc">Zip multiple files together. Supports drag & drop.</div>
+  </li>
+
+  <li class="tool-item">
+    <a class="tool-link" href="pdfmerger/index.html">📄 PDF Merger</a>
+    <div class="tool-desc">Merge multiple PDF documents into one.</div>
+  </li>
+
+  <!-- Add new tools here: -->
+  <li class="tool-item">
+    <a class="tool-link" href="diffchecker/index.html">🔍 Text Diff Checker</a>
+    <div class="tool-desc">Compare two pieces of text to find differences.</div>
+  </li>
+
+  <li class="tool-item">
+    <a class="tool-link" href="qrcode/index.html">📱 QR Code Generator</a>
+    <div class="tool-desc">Generate QR codes from links, text, or contact info.</div>
+  </li>
+
+  <li class="tool-item">
+    <a class="tool-link" href="unitconverter/index.html">📏 Unit Converter</a>
+    <div class="tool-desc">Convert between metric, imperial, time, and more.</div>
+  </li>
 </ul>
 
 </body>
