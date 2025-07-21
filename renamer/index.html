@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Batch File Renamer</title>
   <style>
     body {
@@ -25,11 +25,6 @@
       margin-bottom: 0.5rem;
     }
 
-    header p {
-      font-size: 1rem;
-      opacity: 0.9;
-    }
-
     main {
       max-width: 800px;
       margin: 2rem auto;
@@ -45,36 +40,38 @@
       text-align: center;
       cursor: pointer;
       border-radius: 8px;
-      transition: background 0.3s;
+      transition: background 0.3s, border-color 0.3s;
     }
 
-    .drop-zone:hover {
-      background: #f1f1f1;
+    .drop-zone.dragover {
+      background: #eef6ff;
+      border-color: #4b6cb7;
     }
 
     .file-list {
-      margin-top: 1rem;
+      margin-top: 1.5rem;
     }
 
     .file-list div {
       display: flex;
       justify-content: space-between;
-      padding: 0.5rem;
+      padding: 0.4rem 0;
       border-bottom: 1px solid #eee;
       font-size: 0.95rem;
     }
 
-    label, input {
-      display: block;
-      width: 100%;
-      margin-top: 1rem;
-      font-size: 1rem;
+    label {
+      margin-top: 1.5rem;
+      font-weight: bold;
     }
 
-    input[type="text"] {
+    input[type="text"], input[type="number"] {
       padding: 0.5rem;
-      border-radius: 4px;
+      width: 100%;
+      margin-top: 0.25rem;
       border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
     }
 
     button {
@@ -98,19 +95,22 @@
 
   <header>
     <h1>Batch File Renamer</h1>
-    <p>Rename hundreds of files instantly — all in your browser</p>
+    <p>Rename hundreds of files instantly — right in your browser</p>
   </header>
 
   <main>
-    <div class="drop-zone" id="drop-zone">
+    <div class="drop-zone" id="drop-zone" tabindex="0" aria-label="Drop zone for files">
       Drag and drop files here or click to select
       <input type="file" id="file-input" multiple style="display: none;" />
     </div>
 
     <div class="file-list" id="file-list"></div>
 
-    <label for="pattern">Rename Pattern (use {n} for number):</label>
-    <input type="text" id="pattern" placeholder="e.g. vacation_{n}" />
+    <label for="pattern">Rename Pattern <small>(use <code>{n}</code> or <code>{n:3}</code> for zero-padded numbers)</small>:</label>
+    <input type="text" id="pattern" placeholder="e.g. vacation_{n:3}" value="file_{n}" />
+
+    <label for="start-number">Starting Number:</label>
+    <input type="number" id="start-number" min="1" value="1" />
 
     <button id="rename-btn">Rename & Download ZIP</button>
   </main>
@@ -122,45 +122,71 @@
     const fileList = document.getElementById('file-list');
     const renameBtn = document.getElementById('rename-btn');
     const patternInput = document.getElementById('pattern');
+    const startNumberInput = document.getElementById('start-number');
 
     let files = [];
 
     dropZone.addEventListener('click', () => fileInput.click());
+
     dropZone.addEventListener('dragover', e => {
       e.preventDefault();
-      dropZone.style.background = '#eef';
+      dropZone.classList.add('dragover');
     });
-    dropZone.addEventListener('dragleave', () => dropZone.style.background = '');
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+
     dropZone.addEventListener('drop', e => {
       e.preventDefault();
-      dropZone.style.background = '';
+      dropZone.classList.remove('dragover');
       handleFiles(e.dataTransfer.files);
     });
 
     fileInput.addEventListener('change', e => handleFiles(e.target.files));
+    patternInput.addEventListener('input', displayFileList);
+    startNumberInput.addEventListener('input', displayFileList);
 
     function handleFiles(fileListInput) {
       files = Array.from(fileListInput);
       displayFileList();
     }
 
+    function getFormattedNumber(n, pattern) {
+      const match = pattern.match(/{n:(\d+)}/);
+      if (match) {
+        return String(n).padStart(parseInt(match[1]), '0');
+      }
+      return n;
+    }
+
     function displayFileList() {
       fileList.innerHTML = '';
+      const pattern = patternInput.value || 'file_{n}';
+      const start = parseInt(startNumberInput.value) || 1;
+
       files.forEach((file, i) => {
+        const ext = file.name.substring(file.name.lastIndexOf('.') + 1);
+        const number = getFormattedNumber(i + start, pattern);
+        const newName = pattern.replace(/{n(:\d+)?}/, number) + '.' + ext;
+
         const row = document.createElement('div');
-        row.textContent = `${file.name}`;
+        row.innerHTML = `<span>${file.name}</span> → <strong>${newName}</strong>`;
         fileList.appendChild(row);
       });
     }
 
     renameBtn.addEventListener('click', async () => {
       const pattern = patternInput.value || 'file_{n}';
+      const start = parseInt(startNumberInput.value) || 1;
       const zip = new JSZip();
+      const regex = /{n(?::\d+)?}/;
 
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        const ext = file.name.split('.').pop();
-        const newName = pattern.replace('{n}', i + 1) + '.' + ext;
+        const ext = file.name.substring(file.name.lastIndexOf('.') + 1);
+        const number = getFormattedNumber(i + start, pattern);
+        const newName = pattern.replace(regex, number) + '.' + ext;
         const content = await file.arrayBuffer();
         zip.file(newName, content);
       }
